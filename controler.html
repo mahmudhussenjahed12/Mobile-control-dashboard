@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Final Control Dashboard v7</title>
+
+<style>
+:root{
+  --bg:#f4f6fb;
+  --card:#ffffff;
+  --text:#111;
+  --sub:#666;
+  --accent:#2563eb;
+}
+
+body.dark{
+  --bg:#0b1220;
+  --card:#1e293b;
+  --text:#f8fafc;
+  --sub:#94a3b8;
+}
+
+body{
+  margin:0;
+  font-family:Arial;
+  background:var(--bg);
+  color:var(--text);
+}
+
+/* HEADER */
+header{
+  padding:15px;
+  text-align:center;
+  position:sticky;
+  top:0;
+  background:var(--bg);
+  z-index:10;
+}
+
+h1{margin:0;font-size:18px;}
+#time{font-size:12px;color:var(--sub);}
+
+/* GRID */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:10px;
+  padding:15px;
+}
+
+.card{
+  background:var(--card);
+  padding:12px;
+  border-radius:14px;
+  text-align:center;
+  box-shadow:0 3px 10px rgba(0,0,0,0.1);
+  transition:0.2s;
+}
+.card:hover{transform:scale(1.05);}
+
+a{
+  text-decoration:none;
+  color:var(--text);
+  font-weight:bold;
+  display:block;
+}
+
+small{color:var(--sub);font-size:12px;}
+
+/* TOP BAR */
+.topbar{
+  display:flex;
+  gap:8px;
+  justify-content:center;
+  flex-wrap:wrap;
+  padding:10px;
+}
+
+input{
+  padding:10px;
+  border-radius:8px;
+  border:1px solid #ccc;
+  width:200px;
+}
+
+button{
+  padding:10px;
+  border:none;
+  border-radius:8px;
+  background:var(--accent);
+  color:white;
+  cursor:pointer;
+}
+
+/* CHAT */
+#chat{
+  height:140px;
+  overflow:auto;
+  font-size:12px;
+  margin:10px;
+  padding:10px;
+  background:rgba(0,0,0,0.05);
+  border-radius:10px;
+}
+
+/* FLOAT */
+.fab{
+  position:fixed;
+  right:15px;
+  bottom:80px;
+}
+
+.fab button{
+  width:45px;
+  height:45px;
+  border-radius:50%;
+  border:none;
+  background:var(--accent);
+  color:white;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>⚡ Final Control Dashboard v7</h1>
+  <div id="time"></div>
+</header>
+
+<div class="topbar">
+  <input id="msg" placeholder="Ask / search command..." />
+  <button onclick="send()">➤</button>
+  <button onclick="voice()">🎤</button>
+  <button onclick="theme()">🌙</button>
+</div>
+
+<!-- CHAT -->
+<div id="chat"></div>
+
+<!-- GRID APPS -->
+<div class="grid">
+
+  <div class="card"><a href="https://accounts.google.com/">📧 Gmail Login</a><small>Sign in</small></div>
+  <div class="card"><a href="https://mail.google.com/">📬 Gmail</a><small>Inbox</small></div>
+  <div class="card"><a href="https://drive.google.com/">☁️ Drive</a><small>Files</small></div>
+  <div class="card"><a href="https://photos.google.com/">📸 Photos</a><small>Gallery</small></div>
+  <div class="card"><a href="https://www.google.com/maps/">🗺️ Maps</a><small>Navigation</small></div>
+  <div class="card"><a href="https://passwords.google.com/">🔑 Passwords</a><small>Security</small></div>
+  <div class="card"><a href="https://myaccount.google.com/">🔐 Account</a><small>Control center</small></div>
+  <div class="card"><a href="https://myactivity.google.com/">📊 Activity</a><small>History</small></div>
+  <div class="card"><a href="https://timeline.google.com/">📍 Location History</a><small>Maps timeline</small></div>
+  <div class="card"><a href="https://contacts.google.com/">☎️ Contacts</a><small>Sync</small></div>
+  <div class="card"><a href="https://messages.google.com/web/">💬 Messages</a><small>SMS</small></div>
+  <div class="card"><a href="https://web.whatsapp.com/">📱 WhatsApp Web</a><small>Chat</small></div>
+  <div class="card"><a href="https://takeout.google.com/">📦 Data Export</a><small>Download data</small></div>
+
+</div>
+
+<!-- FLOAT BUTTON -->
+<div class="fab">
+  <button onclick="alert('AI Assistant Ready 🤖')">🤖</button>
+</div>
+
+<script>
+
+/* CLOCK */
+setInterval(()=>{
+  document.getElementById("time").innerText =
+    new Date().toLocaleString();
+},1000);
+
+/* THEME */
+function theme(){
+  document.body.classList.toggle("dark");
+}
+
+/* CHAT AI */
+function send(){
+  let input=document.getElementById("msg");
+  let text=input.value.toLowerCase();
+  let chat=document.getElementById("chat");
+
+  if(!text) return;
+
+  chat.innerHTML += "🧑 You: "+text+"<br>";
+
+  let reply="🤖 Command not found";
+
+  if(text.includes("gmail")) window.open("https://mail.google.com/");
+  if(text.includes("drive")) window.open("https://drive.google.com/");
+  if(text.includes("maps")) window.open("https://www.google.com/maps/");
+  if(text.includes("login")) window.open("https://accounts.google.com/");
+
+  if(text.includes("time")) reply="⏰ "+new Date().toLocaleTimeString();
+
+  chat.innerHTML += "🤖 AI: "+reply+"<br>";
+  input.value="";
+  chat.scrollTop=chat.scrollHeight;
+}
+
+/* VOICE */
+function voice(){
+  let SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){alert("Voice not supported");return;}
+
+  let rec=new SR();
+  rec.lang="en-US";
+
+  rec.onresult=function(e){
+    document.getElementById("msg").value =
+      e.results[0][0].transcript;
+    send();
+  }
+
+  rec.start();
+}
+
+</script>
+
+</body>
+</html>
